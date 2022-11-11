@@ -2,11 +2,13 @@ package com.example.tes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle.State
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var edtWidth: EditText
@@ -14,6 +16,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var edtLength: EditText
     private lateinit var btnCalculate: Button
     private lateinit var tvResult: TextView
+
+    companion object{
+        private const val STATE_RESULT = "state_result"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         tvResult = findViewById(R.id.tv_result)
 
         btnCalculate.setOnClickListener(this)
+
+        if(savedInstanceState != null){
+            val result = savedInstanceState.getString(STATE_RESULT)as String
+            tvResult.text = result
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_RESULT, tvResult.text.toString())
     }
 
     private fun toDouble(str: String) : Double?{
